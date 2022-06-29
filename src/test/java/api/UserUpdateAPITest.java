@@ -7,7 +7,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import pojo.UserPOJO;
+import model.UserPOJO;
 
 public class UserUpdateAPITest {
     private UserPOJO user;
@@ -58,7 +58,11 @@ public class UserUpdateAPITest {
         accessToken = userAccessToken(response);
         userEdited = UserPOJO.getRandom();
         updateResponse = userAPI.sendPatchUserWithoutAuthToken(userEdited);
-        updated = userUpdatedFailure(updateResponse);
+        updated = updateResponse.then()
+                .assertThat()
+                .statusCode(401)
+                .extract()
+                .path("success");;
         Assert.assertFalse("Ожидается, что updateSuccess = false, но пришло true", updated);
     }
 
@@ -96,12 +100,12 @@ public class UserUpdateAPITest {
                 .path("success");
     }
 
-    @Step("Получить статус о неуспешно обновлении пользователя - 401")
-    public boolean userUpdatedFailure(Response response){
-        return response.then()
-                .assertThat()
-                .statusCode(401)
-                .extract()
-                .path("success");
-    }
+//    @Step("Получить статус о неуспешно обновлении пользователя - 401")
+//    public boolean userUpdatedFailure(Response response){
+//        return response.then()
+//                .assertThat()
+//                .statusCode(401)
+//                .extract()
+//                .path("success");
+//    }
 }

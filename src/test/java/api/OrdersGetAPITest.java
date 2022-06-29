@@ -7,7 +7,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import pojo.UserPOJO;
+import model.UserPOJO;
 
 public class OrdersGetAPITest {
     private UserPOJO user;
@@ -41,7 +41,12 @@ public class OrdersGetAPITest {
     public void createOrderWithoutAuthSuccess() {
         expectedMessage = "You should be authorised";
         orderResponse = ordersAPI.sendGetOrdersWithoutAuth();
-        actualMessage = orderNotGottenMustBeAuth(orderResponse);
+        actualMessage = orderResponse.then()
+                .assertThat()
+                .statusCode(401)
+                .extract()
+                .path("message");
+        ;
         Assert.assertEquals("Ожидается сообщение о том, что нужно быть авторизованным", expectedMessage, actualMessage);
     }
 
@@ -55,27 +60,32 @@ public class OrdersGetAPITest {
         created = userCreatedSuccess(response);
         accessToken = userAccessToken(response);
         orderResponse = ordersAPI.sendGetOrdersWithAuth(accessToken);
-        orderGotten = orderGottenSuccess(orderResponse);
-        Assert.assertTrue("Ожидается, что будет получен список заказов конкретного пользователя", orderGotten);
-    }
-
-    @Step("Получить ошибку о том, что нельзя получить заказы без авторизации - 401")
-    public String orderNotGottenMustBeAuth(Response response) {
-        return response.then()
-                .assertThat()
-                .statusCode(401)
-                .extract()
-                .path("message");
-    }
-
-    @Step("Получить статус об успешном получении заказов пользователя - 200")
-    public boolean orderGottenSuccess(Response response) {
-        return response.then()
+        orderGotten = orderResponse.then()
                 .assertThat()
                 .statusCode(200)
                 .extract()
                 .path("success");
+        ;
+        Assert.assertTrue("Ожидается, что будет получен список заказов конкретного пользователя", orderGotten);
     }
+
+//    @Step("Получить ошибку о том, что нельзя получить заказы без авторизации - 401")
+//    public String orderNotGottenMustBeAuth(Response response) {
+//        return response.then()
+//                .assertThat()
+//                .statusCode(401)
+//                .extract()
+//                .path("message");
+//    }
+
+//    @Step("Получить статус об успешном получении заказов пользователя - 200")
+//    public boolean orderGottenSuccess(Response response) {
+//        return response.then()
+//                .assertThat()
+//                .statusCode(200)
+//                .extract()
+//                .path("success");
+//    }
 
     @Step("Получить статус об успешном создании пользователя - 200")
     public boolean userCreatedSuccess(Response response) {

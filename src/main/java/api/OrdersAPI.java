@@ -2,7 +2,7 @@ package api;
 
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
-import pojo.OrderPOJO;
+import model.OrderPOJO;
 
 public class OrdersAPI extends MainAPI {
 

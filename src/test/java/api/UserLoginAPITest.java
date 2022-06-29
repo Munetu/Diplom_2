@@ -7,8 +7,8 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import pojo.UserCredentials;
-import pojo.UserPOJO;
+import model.UserCredentials;
+import model.UserPOJO;
 
 public class UserLoginAPITest {
     private UserPOJO user;

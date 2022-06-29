@@ -1,14 +1,15 @@
 package api;
 
+import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import pojo.IngredientsResponsePOJO;
-import pojo.OrderPOJO;
-import pojo.UserPOJO;
+import model.IngredientsResponsePOJO;
+import model.OrderPOJO;
+import model.UserPOJO;
 
 import java.util.List;
 
@@ -126,6 +127,7 @@ public class OrdersCreateAPITest {
         return response.body().as(IngredientsResponsePOJO.class);
     }
 
+    @Step("Получить статус об успешном создании заказа - 200")
     public boolean orderCreatedSuccess(Response response) {
         return response.then()
                 .assertThat()
@@ -134,6 +136,7 @@ public class OrdersCreateAPITest {
                 .path("success");
     }
 
+    @Step("Получить сообщение о том, что для создания заказа должны быть посланы ID ингридиентов - 400")
     public String orderNotCreatedMustBeIds400(Response response) {
         return response.then()
                 .assertThat()
@@ -142,12 +145,14 @@ public class OrdersCreateAPITest {
                 .path("message");
     }
 
+    @Step("Получить сообщение о том, что были посланы неправильные ID ингридиентов - 400")
     public void orderNotCreatedIncorrectIds500(Response response) {
         response.then()
                 .assertThat()
                 .statusCode(500);
     }
 
+    @Step("Получить статус об успешном создании пользователя - 200")
     public boolean userCreatedSuccess(Response response) {
         return response.then()
                 .assertThat()
@@ -156,12 +161,14 @@ public class OrdersCreateAPITest {
                 .path("success");
     }
 
+    @Step("Получить accessToken")
     public String userAccessToken(Response response) {
         return response.then()
                 .extract()
                 .path("accessToken");
     }
 
+    @Step("Получить статус об успешном удалении пользователя - 202")
     public boolean userDeletedSuccess(Response response) {
         return response.then()
                 .assertThat()

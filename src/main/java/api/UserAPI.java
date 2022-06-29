@@ -2,8 +2,8 @@ package api;
 
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
-import pojo.UserCredentials;
-import pojo.UserPOJO;
+import model.UserCredentials;
+import model.UserPOJO;
 
 public class UserAPI extends MainAPI {
 
